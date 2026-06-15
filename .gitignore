@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.local
+dist/
+*.log
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.png
+uploads/*.webp
+.DS_Store
