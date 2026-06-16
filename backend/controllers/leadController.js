@@ -2,38 +2,45 @@ const Lead = require('../models/Lead');
 const Property = require('../models/Property');
 const { sendEnquiryNotification, sendLeadAssignmentEmail } = require('../services/emailService');
 
-// @desc    Create lead / enquiry
+// @desc    Create lead / enquiry (property or general)
 // @route   POST /api/leads
 exports.createLead = async (req, res, next) => {
   try {
     const { propertyId, name, email, phone, message } = req.body;
 
-    const property = await Property.findById(propertyId).populate('agent', 'email name');
-    if (!property) {
-      return res.status(404).json({ success: false, message: 'Property not found' });
+    let agentId;
+    let enquiryType = 'general';
+
+    if (propertyId) {
+      const property = await Property.findById(propertyId).populate('agent', 'email name');
+      if (!property) return res.status(404).json({ success: false, message: 'Property not found' });
+      agentId = property.agent?._id;
+      enquiryType = 'property';
+      await Property.findByIdAndUpdate(propertyId, { $inc: { enquiries: 1 } });
+
+      try {
+        const lead = await Lead.create({
+          user: req.user ? req.user.id : undefined,
+          property: propertyId,
+          agent: agentId,
+          name, email, phone, message,
+          enquiryType
+        });
+        await sendEnquiryNotification(lead, property, property.agent?.email);
+        return res.status(201).json({ success: true, message: 'Enquiry submitted successfully', lead });
+      } catch (e) {
+        console.error('Email notification failed:', e.message);
+      }
     }
 
+    // General enquiry (no property)
     const lead = await Lead.create({
       user: req.user ? req.user.id : undefined,
-      property: propertyId,
-      agent: property.agent._id,
-      name,
-      email,
-      phone,
-      message
+      name, email, phone, message,
+      enquiryType: 'general'
     });
 
-    // Increment property enquiry count
-    await Property.findByIdAndUpdate(propertyId, { $inc: { enquiries: 1 } });
-
-    // Notify agent
-    try {
-      await sendEnquiryNotification(lead, property, property.agent.email);
-    } catch (e) {
-      console.error('Email notification failed:', e.message);
-    }
-
-    res.status(201).json({ success: true, message: 'Enquiry submitted successfully', lead });
+    res.status(201).json({ success: true, message: 'Enquiry submitted successfully! We will contact you soon.', lead });
   } catch (error) {
     next(error);
   }
@@ -98,7 +105,6 @@ exports.getLead = async (req, res, next) => {
 
     if (!lead) return res.status(404).json({ success: false, message: 'Lead not found' });
 
-    // Only agent or admin can view
     if (lead.agent && lead.agent._id.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
@@ -142,7 +148,6 @@ exports.addNote = async (req, res, next) => {
 
     lead.notes.push({ note: req.body.note, addedBy: req.user.id });
     await lead.save();
-
     await lead.populate('notes.addedBy', 'name');
     res.json({ success: true, notes: lead.notes });
   } catch (error) {
@@ -162,9 +167,7 @@ exports.assignLead = async (req, res, next) => {
 
     if (!lead) return res.status(404).json({ success: false, message: 'Lead not found' });
 
-    try {
-      await sendLeadAssignmentEmail(lead.agent, lead, lead.property);
-    } catch (e) {}
+    try { await sendLeadAssignmentEmail(lead.agent, lead, lead.property); } catch (e) {}
 
     res.json({ success: true, lead });
   } catch (error) {

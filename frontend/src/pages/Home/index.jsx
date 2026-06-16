@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import SearchBar from '../../components/shared/SearchBar';
 import PropertyCard from '../../components/property/PropertyCard';
 import { propertyService } from '../../services/property/propertyService';
+import api from '../../services/api/axiosInstance';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import {
   FaHome, FaBuilding, FaUsers, FaHandshake, FaShieldAlt,
@@ -54,6 +55,27 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState(null);
   const [leadForm, setLeadForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [leadLoading, setLeadLoading] = useState(false);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
+
+  const handleLeadSubmit = async (e) => {
+    e.preventDefault();
+    setLeadLoading(true);
+    try {
+      await api.post('/leads', {
+        name: leadForm.name,
+        email: leadForm.email,
+        phone: leadForm.phone,
+        message: leadForm.message
+      });
+      setLeadSubmitted(true);
+      setLeadForm({ name: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to submit. Please try again.');
+    } finally {
+      setLeadLoading(false);
+    }
+  };
 
   useEffect(() => {
     propertyService.getFeatured()
@@ -256,7 +278,17 @@ export default function Home() {
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-xl">
               <h3 className="font-bold text-text-main mb-4">Quick Enquiry</h3>
-              <form className="space-y-3" onSubmit={(e) => { e.preventDefault(); alert('Enquiry submitted! We will contact you soon.'); }}>
+              {leadSubmitted ? (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                  <p className="font-semibold text-dark">Enquiry Submitted!</p>
+                  <p className="text-text-sub text-sm mt-1">Our team will contact you within 24 hours.</p>
+                  <button onClick={() => setLeadSubmitted(false)} className="mt-4 text-primary text-sm font-medium hover:underline">Submit another enquiry</button>
+                </div>
+              ) : (
+              <form className="space-y-3" onSubmit={handleLeadSubmit}>
                 <input
                   type="text" placeholder="Your Name" required
                   value={leadForm.name} onChange={e => setLeadForm({ ...leadForm, name: e.target.value })}
@@ -278,10 +310,11 @@ export default function Home() {
                   onChange={e => setLeadForm({ ...leadForm, message: e.target.value })}
                   className="input-field text-sm resize-none"
                 />
-                <button type="submit" className="w-full bg-dark text-white font-semibold py-3 rounded-lg hover:bg-secondary transition-colors">
-                  Submit Enquiry
+                <button type="submit" disabled={leadLoading} className="w-full bg-dark text-white font-semibold py-3 rounded-lg hover:bg-secondary transition-colors disabled:opacity-60">
+                  {leadLoading ? 'Submitting...' : 'Submit Enquiry'}
                 </button>
               </form>
+              )}
             </div>
           </div>
         </div>

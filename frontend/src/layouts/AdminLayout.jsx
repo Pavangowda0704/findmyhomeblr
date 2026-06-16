@@ -1,7 +1,7 @@
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { FaUsers, FaBuilding, FaEnvelope, FaChartBar, FaSignOutAlt, FaTachometerAlt } from 'react-icons/fa';
+import { FaUsers, FaBuilding, FaEnvelope, FaChartBar, FaSignOutAlt, FaTachometerAlt, FaClipboardList } from 'react-icons/fa';
 
 const AdminLayout = () => {
   const { user, logout } = useAuth();
@@ -13,7 +13,8 @@ const AdminLayout = () => {
     { to: '/admin/users', label: 'Users', icon: FaUsers },
     { to: '/admin/properties', label: 'Properties', icon: FaBuilding },
     { to: '/admin/leads', label: 'Leads', icon: FaEnvelope },
-    { to: '/admin/analytics', label: 'Analytics', icon: FaChartBar }
+    { to: '/admin/analytics', label: 'Analytics', icon: FaChartBar },
+    { to: '/admin/applications', label: 'Applications', icon: FaClipboardList }
   ];
 
   return (

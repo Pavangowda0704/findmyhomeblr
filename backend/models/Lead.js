@@ -8,7 +8,7 @@ const leadSchema = new mongoose.Schema({
   property: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property',
-    required: true
+    required: false   // optional — general enquiries have no property
   },
   agent: {
     type: mongoose.Schema.Types.ObjectId,
@@ -18,6 +18,11 @@ const leadSchema = new mongoose.Schema({
   email: { type: String, required: true },
   phone: { type: String, required: true },
   message: { type: String },
+  enquiryType: {
+    type: String,
+    enum: ['property', 'general'],
+    default: 'general'
+  },
   status: {
     type: String,
     enum: ['new', 'contacted', 'interested', 'site_visit', 'negotiation', 'closed', 'lost'],

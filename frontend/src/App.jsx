@@ -20,6 +20,7 @@ const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const AgentApply = lazy(() => import('./pages/AgentApply'));
 
 // Dashboard pages
 const UserDashboard = lazy(() => import('./pages/Dashboard/Overview'));
@@ -42,6 +43,7 @@ const AdminUsers = lazy(() => import('./pages/Admin/Users'));
 const AdminProperties = lazy(() => import('./pages/Admin/Properties'));
 const AdminLeads = lazy(() => import('./pages/Admin/Leads'));
 const AdminAnalytics = lazy(() => import('./pages/Admin/Analytics'));
+const AdminApplications = lazy(() => import('./pages/Admin/Applications'));
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -79,6 +81,9 @@ function AppRoutes() {
         <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
         <Route path="/forgot-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
         <Route path="/reset-password/:token" element={<GuestRoute><ResetPassword /></GuestRoute>} />
+
+        {/* Agent Application - public, no login required */}
+        <Route path="/agent-apply" element={<AgentApply />} />
 
         {/* User Dashboard */}
         <Route path="/dashboard" element={
@@ -118,6 +123,7 @@ function AppRoutes() {
           <Route path="properties" element={<AdminProperties />} />
           <Route path="leads" element={<AdminLeads />} />
           <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="applications" element={<AdminApplications />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

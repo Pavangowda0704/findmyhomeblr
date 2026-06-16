@@ -16,6 +16,7 @@ const leadRoutes = require('./routes/leadRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const agentRoutes = require('./routes/agentRoutes');
+const agentApplicationRoutes = require('./routes/agentApplicationRoutes');
 
 connectDB();
 
@@ -70,6 +71,7 @@ app.use('/api/leads', leadRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/agent', agentRoutes);
+app.use('/api/agent-applications', agentApplicationRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Find My Home BLR API is running' });
