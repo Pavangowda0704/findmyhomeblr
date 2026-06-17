@@ -87,8 +87,8 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-dark min-h-[90vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-dark via-secondary to-dark/90" />
+    <section className="relative flex items-center overflow-hidden" style={{ minHeight: 'calc(100vh - 64px)', backgroundColor: '#1A2229' }}>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1A2229 0%, #24303A 50%, #1A2229 100%)' }} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary rounded-full px-4 py-2 text-sm font-medium mb-6">
             <FaStar className="text-xs" /> Bangalore's #1 Real Estate Platform

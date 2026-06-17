@@ -44,6 +44,8 @@ const AdminProperties = lazy(() => import('./pages/Admin/Properties'));
 const AdminLeads = lazy(() => import('./pages/Admin/Leads'));
 const AdminAnalytics = lazy(() => import('./pages/Admin/Analytics'));
 const AdminApplications = lazy(() => import('./pages/Admin/Applications'));
+const AdminCreateProperty = lazy(() => import('./pages/Admin/CreateProperty'));
+const AdminEditProperty = lazy(() => import('./pages/Admin/EditProperty'));
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -124,6 +126,8 @@ function AppRoutes() {
           <Route path="leads" element={<AdminLeads />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="applications" element={<AdminApplications />} />
+          <Route path="properties/create" element={<AdminCreateProperty />} />
+          <Route path="properties/edit/:id" element={<AdminEditProperty />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

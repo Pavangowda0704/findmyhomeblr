@@ -11,12 +11,18 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <Link to="/" className="inline-block mb-5">
-              <img
-                src="/logo-dark.jpeg"
-                alt="Find My Home BLR"
-                className="h-16 w-auto object-contain"
-                style={{ maxWidth: '160px' }}
-              />
+              <div className="flex items-center gap-3">
+                <img
+                  src="/logo-dark.png"
+                  alt="Find My Home BLR"
+                  className="h-20 w-auto object-contain"
+                  style={{ maxWidth: '120px' }}
+                />
+                <div className="footer-brand-title">
+                  <span className="brand-main">Find My Home <span>BLR</span></span>
+                  <span className="brand-sub">We Find. You Live.</span>
+                </div>
+              </div>
             </Link>
             <p className="text-white/60 text-sm leading-relaxed mb-5">
               Bangalore's most trusted real estate platform. Find your dream home with ease.
@@ -38,7 +44,8 @@ const Footer = () => {
                 { to: '/buy', label: 'Buy Property' },
                 { to: '/rent', label: 'Rent Property' },
                 { to: '/commercial', label: 'Commercial' },
-                { to: '/compare', label: 'Compare Properties' }
+                { to: '/compare', label: 'Compare Properties' },
+                { to: '/agent-apply', label: 'Join as Agent' }
               ].map(link => (
                 <li key={link.to}>
                   <Link to={link.to} className="text-white/60 hover:text-primary text-sm transition-colors">{link.label}</Link>
@@ -81,8 +88,8 @@ const Footer = () => {
 
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="/logo-dark.jpeg" alt="Find My Home BLR" className="h-8 w-auto object-contain" />
-            <p className="text-white/40 text-sm">&copy; {currentYear} Find My Home BLR. All rights reserved.</p>
+            <img src="/logo-dark.png" alt="Find My Home BLR" className="h-10 w-auto object-contain" />
+            <p className="text-white/40 text-sm">&copy; {currentYear} <span className="text-white/60 font-medium">Find My Home BLR</span>. All rights reserved.</p>
           </div>
           <div className="flex gap-6">
             {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map(item => (
