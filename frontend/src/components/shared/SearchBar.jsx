@@ -31,7 +31,7 @@ const SearchBar = ({ variant = 'hero' }) => {
 
   if (variant === 'hero') {
     return (
-      <div className="bg-white rounded-2xl shadow-2xl p-2 w-full max-w-4xl mx-auto">
+      <div className="w-full">
         {/* Tabs */}
         <div className="flex gap-1 mb-2 p-1 bg-background rounded-xl">
           {tabs.map(t => (

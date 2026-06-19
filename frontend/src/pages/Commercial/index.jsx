@@ -4,6 +4,9 @@ import PropertyFilters from '../../components/property/PropertyFilters';
 import Pagination from '../../components/ui/Pagination';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { propertyService } from '../../services/property/propertyService';
+import { userService } from '../../services/user/userService';
+import toast from 'react-hot-toast';
+import { FaBalanceScale } from 'react-icons/fa';
 import { FaThLarge, FaList, FaSortAmountDown } from 'react-icons/fa';
 
 export default function Commercial() {
@@ -15,6 +18,7 @@ export default function Commercial() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState({});
+  const [compareList, setCompareList] = useState([]);
 
   const fetchProperties = useCallback(async (filterParams = {}, page = 1) => {
     setLoading(true);
@@ -31,6 +35,24 @@ export default function Commercial() {
 
   const handleFilter = (f) => { setFilters(f); setCurrentPage(1); fetchProperties(f, 1); };
   const handlePageChange = (p) => { setCurrentPage(p); fetchProperties(filters, p); window.scrollTo({ top: 0 }); };
+
+  const handleCompare = async (property) => {
+    if (compareList.length >= 4 && !compareList.includes(property._id)) {
+      toast.error('You can compare up to 4 properties only');
+      return;
+    }
+    try {
+      await userService.toggleCompare(property._id);
+      setCompareList(prev =>
+        prev.includes(property._id)
+          ? prev.filter(id => id !== property._id)
+          : [...prev, property._id]
+      );
+      toast.success(compareList.includes(property._id) ? 'Removed from compare' : 'Added to compare');
+    } catch {
+      toast.error('Please login to compare properties');
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -70,6 +92,15 @@ export default function Commercial() {
           )}
         </div>
       </div>
+      {/* Compare floating bar */}
+      {compareList.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-dark text-white rounded-2xl shadow-2xl px-6 py-3 flex items-center gap-4">
+          <FaBalanceScale className="text-primary text-lg" />
+          <span className="text-sm font-medium">{compareList.length} {compareList.length === 1 ? 'property' : 'properties'} selected</span>
+          <a href="/compare" className="bg-primary text-dark text-sm font-bold px-4 py-1.5 rounded-lg hover:bg-primary-dark transition-colors">Compare Now</a>
+          <button onClick={() => setCompareList([])} className="text-white/60 hover:text-white text-sm transition-colors">Clear</button>
+        </div>
+      )}
     </div>
   );
 }

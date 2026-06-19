@@ -46,8 +46,8 @@ const PropertyCard = ({ property, onCompare, compareList = [] }) => {
           alt={property.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           onError={(e) => {
-            e.target.onerror = null; // prevent infinite error loop
-            e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%232D3142'/%3E%3Ctext x='200' y='118' text-anchor='middle' fill='%237DC221' font-family='sans-serif' font-size='14' font-weight='bold'%3ENo Image%3C/text%3E%3Ctext x='200' y='140' text-anchor='middle' fill='%237DC221' font-family='sans-serif' font-size='11' opacity='0.7'%3EAvailable%3C/text%3E%3C/svg%3E";
+            e.target.onerror = null;
+            e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%232D3142'/%3E%3Ctext x='200' y='118' text-anchor='middle' fill='%238ED600' font-family='sans-serif' font-size='14' font-weight='bold'%3ENo Image%3C/text%3E%3Ctext x='200' y='140' text-anchor='middle' fill='%238ED600' font-family='sans-serif' font-size='11' opacity='0.7'%3EAvailable%3C/text%3E%3C/svg%3E";
           }}
         />
 

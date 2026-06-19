@@ -35,8 +35,8 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-dark flex-col items-center justify-center p-12">
-        <img src="/logo-dark.jpeg" alt="Find My Home BLR" className="w-64 mb-8 object-contain" />
+      <div className="hidden lg:flex lg:w-[45%] bg-dark flex-col items-center justify-center p-12 relative overflow-hidden"><div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #8ED600 0%, transparent 50%), radial-gradient(circle at 80% 20%, #8ED600 0%, transparent 40%)' }} /><div className="relative z-10 flex flex-col items-center w-full">
+        <img src="/logo-dark.png" alt="Find My Home BLR" className="w-64 mb-8 object-contain" />
         <h2 className="text-white text-2xl font-bold text-center mb-3">Join Find My Home BLR</h2>
         <p className="text-white/60 text-center text-sm leading-relaxed max-w-xs">
           Create your account and start exploring thousands of verified properties in Bangalore.
@@ -51,13 +51,19 @@ export default function Register() {
           <p className="text-white/40 text-xs">Are you a real estate agent?</p>
           <Link to="/agent-apply" className="text-primary text-sm font-medium hover:underline">Apply to join as an Agent →</Link>
         </div>
-      </div>
+      </div></div>
 
       {/* Right form */}
       <div className="flex-1 flex items-center justify-center px-4 py-12 overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="lg:hidden text-center mb-8">
-            <Link to="/"><img src="/logo-light.jpeg" alt="Find My Home BLR" className="h-20 mx-auto object-contain" /></Link>
+            <Link to="/" className="inline-flex items-center gap-3">
+              <img src="/logo-light.jpeg" alt="Find My Home BLR" className="h-14 w-auto object-contain" />
+              <div className="text-left">
+                <p className="font-bold text-dark text-base" style={{ fontFamily: "'Poppins', sans-serif" }}>Find My Home <span className="text-primary">BLR</span></p>
+                <p className="text-text-sub text-[10px] uppercase tracking-widest">We Find. You Live.</p>
+              </div>
+            </Link>
           </div>
 
           <div className="mb-8">

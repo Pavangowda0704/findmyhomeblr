@@ -8,14 +8,14 @@ import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import {
   FaHome, FaBuilding, FaUsers, FaHandshake, FaShieldAlt,
   FaMapMarkerAlt, FaStar, FaChevronDown, FaChevronUp,
-  FaPhone, FaEnvelope, FaLock, FaSearch, FaThumbsUp
+  FaPhone, FaEnvelope, FaLock, FaSearch, FaThumbsUp, FaCheckCircle
 } from 'react-icons/fa';
 
 const STATS = [
-  { label: 'Properties Listed', value: '5,000+', icon: FaBuilding },
-  { label: 'Happy Customers', value: '12,000+', icon: FaUsers },
-  { label: 'Expert Agents', value: '350+', icon: FaHandshake },
-  { label: 'Cities Covered', value: '15+', icon: FaMapMarkerAlt }
+  { label: 'Properties Listed', value: '5,000+', sub: 'Verified & Active', icon: FaBuilding },
+  { label: 'Happy Customers', value: '12,000+', sub: 'Trusted by Thousands', icon: FaUsers },
+  { label: 'Expert Agents', value: '350+', sub: 'Professional Support', icon: FaHandshake },
+  { label: 'Cities Covered', value: '15+', sub: 'Across Karnataka', icon: FaMapMarkerAlt }
 ];
 
 const LOCATIONS = [
@@ -50,6 +50,7 @@ const FAQS = [
   { q: 'Can I compare properties?', a: 'Yes! Use the Compare button on property cards to add up to 4 properties for a side-by-side comparison.' }
 ];
 
+const HERO_BG = '/hero-page.png';
 export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,16 +59,18 @@ export default function Home() {
   const [leadLoading, setLeadLoading] = useState(false);
   const [leadSubmitted, setLeadSubmitted] = useState(false);
 
+  useEffect(() => {
+    propertyService.getFeatured()
+      .then(res => setFeatured(res.data.properties || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   const handleLeadSubmit = async (e) => {
     e.preventDefault();
     setLeadLoading(true);
     try {
-      await api.post('/leads', {
-        name: leadForm.name,
-        email: leadForm.email,
-        phone: leadForm.phone,
-        message: leadForm.message
-      });
+      await api.post('/leads', leadForm);
       setLeadSubmitted(true);
       setLeadForm({ name: '', email: '', phone: '', message: '' });
     } catch (err) {
@@ -77,56 +80,104 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    propertyService.getFeatured()
-      .then(res => setFeatured(res.data.properties || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
-
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative bg-dark min-h-screen flex items-center overflow-hidden -mt-24">
-        <div className="absolute inset-0 bg-gradient-to-br from-dark via-secondary to-dark/90" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-24 text-center">
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 text-primary rounded-full px-4 py-2 text-sm font-medium mb-6">
-            <FaStar className="text-xs" /> Bangalore's #1 Real Estate Platform
-          </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-            Find Your Dream Home<br />
-            <span className="text-primary">in Bangalore</span>
-          </h1>
-          <p className="text-white/70 text-lg mb-10 max-w-2xl mx-auto">
-            Discover 5,000+ verified properties across Bangalore. Buy, rent, or invest with confidence.
-          </p>
-          <SearchBar variant="hero" />
-          <div className="flex flex-wrap justify-center gap-6 mt-8 text-white/60 text-sm">
-            <span className="flex items-center gap-2"><FaShieldAlt className="text-primary" /> Verified Listings</span>
-            <span className="flex items-center gap-2"><FaUsers className="text-primary" /> Expert Agents</span>
-            <span className="flex items-center gap-2"><FaHandshake className="text-primary" /> Best Deals</span>
+
+      {/* ── HERO ── */}
+      <section className="relative min-h-screen flex items-center overflow-hidden -mt-20">
+
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url('${HERO_BG}')` }}
+        />
+        {/* Dark overlay — stronger on left for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/70 to-dark/30" />
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+            {/* Left — Text + Search */}
+            <div>
+              <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary rounded-full px-4 py-2 text-sm font-medium mb-6">
+                <FaStar className="text-xs" /> Bangalore's #1 Real Estate Platform
+              </div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-5">
+                Find Your Dream Home<br />
+                <span className="text-primary">in Bangalore</span>
+              </h1>
+
+              <p className="text-white/70 text-lg mb-8 max-w-lg leading-relaxed">
+                Discover 5,000+ verified properties across Bangalore. Buy, Rent and Invest with confidence.
+              </p>
+
+              {/* Search bar */}
+              <div className="bg-white rounded-2xl shadow-2xl p-3 w-full max-w-xl">
+                <SearchBar variant="hero" />
+              </div>
+
+              {/* Trust badges */}
+              <div className="flex flex-wrap gap-6 mt-8">
+                {[
+                  { icon: FaShieldAlt, label: 'Verified Listings' },
+                  { icon: FaUsers, label: 'Expert Agents' },
+                  { icon: FaHandshake, label: 'Best Deals' }
+                ].map(b => (
+                  <div key={b.label} className="flex items-center gap-2 text-white/80 text-sm">
+                    <b.icon className="text-primary" /> {b.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — Floating stat cards (hidden on small screens) */}
+            
+            {/* <div className="hidden lg:flex flex-col items-end gap-4 pr-4">
+              <div className="bg-white rounded-2xl shadow-2xl p-5 flex items-center gap-4 w-56">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FaBuilding className="text-primary text-xl" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-dark">5,000+</p>
+                  <p className="text-text-sub text-sm">Properties Listed</p>
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl shadow-2xl p-5 flex items-center gap-4 w-56 mr-12">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <FaUsers className="text-primary text-xl" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-dark">350+</p>
+                  <p className="text-text-sub text-sm">Expert Agents</p>
+                </div>
+              </div>
+            </div> */}
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="bg-white py-14">
+      {/* ── STATS ── */}
+      <section className="bg-white py-14 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {STATS.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="text-2xl text-primary" />
+              <div key={stat.label} className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <stat.icon className="text-xl text-primary" />
                 </div>
-                <p className="text-3xl font-bold text-dark">{stat.value}</p>
-                <p className="text-text-sub text-sm mt-1">{stat.label}</p>
+                <div>
+                  <p className="text-2xl font-bold text-dark">{stat.value}</p>
+                  <p className="text-text-sub text-xs mt-0.5">{stat.label}</p>
+                  <p className="text-primary text-xs font-medium">{stat.sub}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Popular Locations */}
+      {/* ── POPULAR LOCALITIES ── */}
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -138,12 +189,12 @@ export default function Home() {
               <Link
                 key={loc.name}
                 to={`/buy?locality=${loc.name}`}
-                className="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all"
+                className="group relative h-40 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all hover:-translate-y-1"
                 style={{ backgroundColor: loc.color }}
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent group-hover:from-black/40 transition-all" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent group-hover:from-black/50 transition-all" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-white">
-                  <FaMapMarkerAlt className="text-primary text-2xl mb-2" />
+                  <FaMapMarkerAlt className="text-primary text-2xl mb-2 group-hover:scale-110 transition-transform" />
                   <p className="font-bold text-sm text-center">{loc.name}</p>
                   <p className="text-white/70 text-xs mt-1">{loc.count} Properties</p>
                 </div>
@@ -153,7 +204,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Properties */}
+      {/* ── FEATURED PROPERTIES ── */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-10">
@@ -185,16 +236,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
+      {/* ── WHY CHOOSE US ── */}
       <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="section-title">Why Choose Find My Home BLR?</h2>
             <p className="section-subtitle">We make property search simple, safe, and successful</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {WHY_US.map((item) => (
-              <div key={item.title} className="bg-white rounded-xl p-6 border border-border hover:shadow-md transition-all group">
+              <div key={item.title} className="bg-white rounded-xl p-6 border border-border hover:shadow-md hover:border-primary/30 transition-all group">
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary transition-colors">
                   <item.icon className="text-xl text-primary group-hover:text-dark transition-colors" />
                 </div>
@@ -206,7 +257,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* ── TESTIMONIALS ── */}
       <section className="py-16 bg-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -215,7 +266,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="bg-secondary rounded-xl p-6 border border-white/10">
+              <div key={t.name} className="bg-secondary rounded-xl p-6 border border-white/10 hover:border-primary/30 transition-colors">
                 <div className="flex gap-1 mb-4">
                   {[...Array(t.rating)].map((_, i) => <FaStar key={i} className="text-primary text-sm" />)}
                 </div>
@@ -233,7 +284,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ── FAQ ── */}
       <section className="py-16 bg-background">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -241,13 +292,15 @@ export default function Home() {
           </div>
           <div className="space-y-3">
             {FAQS.map((faq, i) => (
-              <div key={i} className="bg-white rounded-xl border border-border overflow-hidden">
+              <div key={i} className="bg-white rounded-xl border border-border overflow-hidden hover:border-primary/30 transition-colors">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between p-5 text-left font-semibold text-text-main hover:text-primary transition-colors"
                 >
                   {faq.q}
-                  {openFaq === i ? <FaChevronUp className="text-primary flex-shrink-0" /> : <FaChevronDown className="text-text-sub flex-shrink-0" />}
+                  {openFaq === i
+                    ? <FaChevronUp className="text-primary flex-shrink-0 text-sm" />
+                    : <FaChevronDown className="text-text-sub flex-shrink-0 text-sm" />}
                 </button>
                 {openFaq === i && (
                   <div className="px-5 pb-5 text-text-sub text-sm leading-relaxed border-t border-border pt-4">
@@ -260,7 +313,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Lead CTA Section */}
+      {/* ── LEAD CTA ── */}
       <section className="py-16 bg-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -281,44 +334,39 @@ export default function Home() {
               {leadSubmitted ? (
                 <div className="text-center py-8">
                   <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    <FaCheckCircle className="text-green-500 text-xl" />
                   </div>
                   <p className="font-semibold text-dark">Enquiry Submitted!</p>
                   <p className="text-text-sub text-sm mt-1">Our team will contact you within 24 hours.</p>
-                  <button onClick={() => setLeadSubmitted(false)} className="mt-4 text-primary text-sm font-medium hover:underline">Submit another enquiry</button>
+                  <button onClick={() => setLeadSubmitted(false)} className="mt-4 text-primary text-sm font-medium hover:underline">
+                    Submit another enquiry
+                  </button>
                 </div>
               ) : (
-              <form className="space-y-3" onSubmit={handleLeadSubmit}>
-                <input
-                  type="text" placeholder="Your Name" required
-                  value={leadForm.name} onChange={e => setLeadForm({ ...leadForm, name: e.target.value })}
-                  className="input-field text-sm"
-                />
-                <input
-                  type="email" placeholder="Email Address" required
-                  value={leadForm.email} onChange={e => setLeadForm({ ...leadForm, email: e.target.value })}
-                  className="input-field text-sm"
-                />
-                <input
-                  type="tel" placeholder="Mobile Number" required
-                  value={leadForm.phone} onChange={e => setLeadForm({ ...leadForm, phone: e.target.value })}
-                  className="input-field text-sm"
-                />
-                <textarea
-                  placeholder="Your requirements..."
-                  rows={3} value={leadForm.message}
-                  onChange={e => setLeadForm({ ...leadForm, message: e.target.value })}
-                  className="input-field text-sm resize-none"
-                />
-                <button type="submit" disabled={leadLoading} className="w-full bg-dark text-white font-semibold py-3 rounded-lg hover:bg-secondary transition-colors disabled:opacity-60">
-                  {leadLoading ? 'Submitting...' : 'Submit Enquiry'}
-                </button>
-              </form>
+                <form className="space-y-3" onSubmit={handleLeadSubmit}>
+                  <input type="text" placeholder="Your Name" required
+                    value={leadForm.name} onChange={e => setLeadForm({ ...leadForm, name: e.target.value })}
+                    className="input-field text-sm" />
+                  <input type="email" placeholder="Email Address" required
+                    value={leadForm.email} onChange={e => setLeadForm({ ...leadForm, email: e.target.value })}
+                    className="input-field text-sm" />
+                  <input type="tel" placeholder="Mobile Number" required
+                    value={leadForm.phone} onChange={e => setLeadForm({ ...leadForm, phone: e.target.value })}
+                    className="input-field text-sm" />
+                  <textarea placeholder="Your requirements..." rows={3}
+                    value={leadForm.message} onChange={e => setLeadForm({ ...leadForm, message: e.target.value })}
+                    className="input-field text-sm resize-none" />
+                  <button type="submit" disabled={leadLoading}
+                    className="w-full bg-dark text-white font-semibold py-3 rounded-lg hover:bg-secondary transition-colors disabled:opacity-60">
+                    {leadLoading ? 'Submitting...' : 'Submit Enquiry'}
+                  </button>
+                </form>
               )}
             </div>
           </div>
         </div>
       </section>
+
     </div>
   );
 }
