@@ -13,15 +13,12 @@ const Footer = () => {
             <Link to="/" className="inline-block mb-5">
               <div className="flex items-center gap-3">
                 <img
-                  src="/logo-dark.png"
+                  src="/logo-light.jpeg"
                   alt="Find My Home BLR"
-                  className="h-20 w-auto object-contain"
-                  style={{ maxWidth: '120px' }}
+                  className="h-40 w-auto object-contain"
+                  style={{ maxWidth: '200px' }}
                 />
-                <div className="footer-brand-title">
-                  <span className="brand-main">Find My Home <span>BLR</span></span>
-                  <span className="brand-sub">We Find. You Live.</span>
-                </div>
+                
               </div>
             </Link>
             <p className="text-white/60 text-sm leading-relaxed mb-5">
@@ -88,7 +85,7 @@ const Footer = () => {
 
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="/logo-dark.png" alt="Find My Home BLR" className="h-10 w-auto object-contain" />
+            
             <p className="text-white/40 text-sm">&copy; {currentYear} <span className="text-white/60 font-medium">Find My Home BLR</span>. All rights reserved.</p>
           </div>
           <div className="flex gap-6">

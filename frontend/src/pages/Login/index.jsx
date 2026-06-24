@@ -49,21 +49,21 @@ export default function Login() {
           {/* Logo */}
           <Link to="/">
             <img
-              src="/logo-dark.png"
+              src="/logo-light.jpeg"
               alt="Find My Home BLR"
               className="w-40 object-contain mb-2"
             />
           </Link>
 
           {/* Brand title */}
-          <div className="text-center mb-8">
+          {/* <div className="text-center mb-8">
             <p className="text-white font-bold text-xl" style={{ fontFamily: "'Poppins', sans-serif" }}>
               Find My Home <span className="text-primary">BLR</span>
             </p>
             <p className="text-white/40 text-xs uppercase tracking-widest mt-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
               We Find. You Live.
             </p>
-          </div>
+          </div> */}
 
           {/* Welcome text */}
           <div className="text-center mb-10">

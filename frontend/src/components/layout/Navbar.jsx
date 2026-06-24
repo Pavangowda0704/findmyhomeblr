@@ -48,19 +48,12 @@ const Navbar = () => {
           {/* Logo + Brand */}
           <Link to="/" className="flex items-center gap-3 flex-shrink-0">
             <img
-              src="/logo-light.jpeg"
+              src="/logo-light1.jpeg"
               alt="Find My Home BLR"
-              className="h-14 w-auto object-contain"
-              style={{ maxWidth: '56px' }}
+              className="h-16 w-auto object-contain"
+              style={{ maxWidth: '240px' }}
             />
-            <div className="flex flex-col leading-tight">
-              <span className="text-base font-bold text-dark tracking-tight" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                Find My Home <span className="text-primary">BLR</span>
-              </span>
-              <span className="text-[10px] text-text-sub uppercase tracking-widest font-light" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                We Find. You Live.
-              </span>
-            </div>
+            
           </Link>
 
           {/* Desktop Nav Links */}
